@@ -1,0 +1,282 @@
+2402kempner$ maple kempner_2000digits.mpl
+    |\^/|     Maple 16 (APPLE UNIVERSAL OSX)
+._|\|   |/|_. Copyright (c) Maplesoft, a division of Waterloo Maple Inc. 2012
+ \  MAPLE  /  All rights reserved. Maple is a trademark of
+ <____ ____>  Waterloo Maple Inc.
+      |       Type ? for help.
+# This computes the classic Kempner sum with 2000 fractional digits
+# The kempner() procedure in the first execution block is a variation regarding user
+# interface from kempner_base10_all.mw, it prints computation time for some
+# sub-processing.  It has a new argument its "nbkeptsums" which tells it how many partial sums
+# to return
+# 
+# Then the calling block prints out their last 7+3 digits to check if enough partial sums
+# were computed and if output looks reasonable (perhaps we should have more guard
+# digits)
+# 
+# For comments see kempner_base10_all.mw
+# 
+# The second execution block launches the computation
+# 
+# Enjoy!
+# 
+# 
+# THIS BLOCK DEFINES THE kempner() PROCEDURE AND AUXILIARIES
+# ATTENTION THAT GLOBAL VARIABLES ARE USED BY kempner()
+#
+#
+> restart; with(combinat,choose):
+> 
+> ucoeff := proc(k)
+>     option remember;
+>     if k = 1 then
+>         10/(10-N)
+>     else
+>         add(binomial(k-1,u-1)*thegammasums[k-u+1]*ucoeff(u),u=1..k-1)/(10^k - N)
+>     end if
+> end proc:
+> 
+> betasum := proc(K)
+>     add(1/b^K,b=L||level)
+> end:
+> 
+> partialsum := proc(K)
+>     option remember;
+>     if K = 1 then
+>         add(add(1/n,n=L||j),j=1..level-1) + 10/(10-N)*add(1/n,n=L||level)
+>     else
+>         partialsum(K-1) + (-1)^(K-1)*theucoeffs[K]*betasum(K)
+>     end if
+> end:
+> 
+> thing := proc(list)
+>     map(x->seq(10*x+j,j = L0),list)
+> end:
+> 
+> kempner := proc(A,lev,Mmax,nbkeptsums)
+>     local x,starttime,endtime;
+>     global L0,L1,L2,L3,L4,N,level,thegammasums,theucoeffs;
+>     level := lev;
+>     N := nops(A);
+>     L0 := A; L1 := A;
+>     if 0 in A then L1 := subsop(1=NULL,L1) end if;
+>     L1 := map(x->1.*x,L1);
+>     L2 := map(thing,L1);
+>     if level = 3 then L3 := map(thing,L2) end if;
+>     # if level = 4 then L3 := map(thing,L2); L4 := map(thing,L3) end if;
+>     printf("%d gamma sums computed in... ",Mmax);  print();
+>     starttime := time();
+>         thegammasums := array(1..Mmax,[seq(add(a^(m-1),a=L1), m=1..Mmax)]);
+>     endtime := time();
+>     printf("%8.4f seconds", endtime-starttime); print();
+>     thegammasums[1] := N;
+>     forget(ucoeff);
+>     printf("%d moments computed in... ",Mmax);  print();
+>     starttime := time();
+>         theucoeffs := [seq(ucoeff(k),k=1..Mmax)];
+>     endtime := time();
+>     printf("%8.4f seconds", endtime-starttime); print();
+>     forget(partialsum);
+>     printf("%d partial sums computed in... ",Mmax);  print();
+>     starttime := time();
+>         x := seq(partialsum(K),K=Mmax-nbkeptsums+1..Mmax);
+>     endtime := time();
+>     printf("%8.4f seconds", endtime-starttime); print();
+>     return x;
+> end:
+> 
+# THIS BLOCK LAUNCHES THE COMPUTATIONS
+# 
+# 
+# 
+> Digits := 2005; nbdigits := 2000; Mmax:= 1000; nbkeptsums:=50;
+                                                                 Digits := 2005
+
+                                                                nbdigits := 2000
+
+                                                                  Mmax := 1000
+
+                                                                nbkeptsums := 50
+
+> starttime := time():
+> result := kempner([0,1,2,3,4,5,6,7,8],3,Mmax,nbkeptsums):
+1000 gamma sums computed in... 
+
+  0.0430 seconds
+
+1000 moments computed in... 
+
+memory used=69.3MB, alloc=82.6MB, time=0.47
+memory used=202.1MB, alloc=146.6MB, time=1.12
+memory used=332.6MB, alloc=146.6MB, time=1.77
+memory used=464.7MB, alloc=146.6MB, time=2.44
+memory used=591.5MB, alloc=146.6MB, time=3.09
+memory used=715.9MB, alloc=146.6MB, time=3.74
+memory used=839.9MB, alloc=146.6MB, time=4.40
+memory used=963.6MB, alloc=146.6MB, time=5.07
+memory used=1086.9MB, alloc=146.6MB, time=5.74
+memory used=1210.3MB, alloc=146.6MB, time=6.42
+memory used=1333.9MB, alloc=146.6MB, time=7.10
+memory used=1457.8MB, alloc=146.6MB, time=7.79
+memory used=1582.1MB, alloc=146.6MB, time=8.49
+memory used=1706.9MB, alloc=146.6MB, time=9.20
+memory used=1831.3MB, alloc=146.6MB, time=9.92
+memory used=1956.3MB, alloc=146.6MB, time=10.64
+memory used=2080.9MB, alloc=146.6MB, time=11.35
+memory used=2205.8MB, alloc=146.6MB, time=12.08
+memory used=2330.9MB, alloc=146.6MB, time=12.80
+memory used=2456.0MB, alloc=146.6MB, time=13.53
+memory used=2582.0MB, alloc=146.6MB, time=14.27
+memory used=2707.7MB, alloc=146.6MB, time=15.01
+memory used=2833.4MB, alloc=146.6MB, time=15.75
+memory used=2959.2MB, alloc=146.6MB, time=16.49
+ 16.8070 seconds
+
+1000 partial sums computed in... 
+
+memory used=3081.2MB, alloc=146.6MB, time=17.08
+memory used=3192.5MB, alloc=146.6MB, time=17.28
+memory used=3306.2MB, alloc=146.6MB, time=17.51
+memory used=3421.4MB, alloc=146.6MB, time=17.76
+memory used=3537.8MB, alloc=146.6MB, time=18.04
+memory used=3655.0MB, alloc=146.6MB, time=18.32
+memory used=3767.4MB, alloc=146.6MB, time=18.62
+memory used=3875.9MB, alloc=146.6MB, time=18.91
+memory used=3983.9MB, alloc=146.6MB, time=19.22
+memory used=4092.5MB, alloc=146.6MB, time=19.54
+memory used=4202.0MB, alloc=146.6MB, time=19.86
+memory used=4311.6MB, alloc=146.6MB, time=20.19
+memory used=4422.2MB, alloc=146.6MB, time=20.54
+memory used=4533.0MB, alloc=146.6MB, time=20.90
+memory used=4644.9MB, alloc=146.6MB, time=21.27
+memory used=4757.6MB, alloc=146.6MB, time=21.64
+memory used=4870.2MB, alloc=146.6MB, time=22.02
+memory used=4983.4MB, alloc=146.6MB, time=22.42
+memory used=5097.2MB, alloc=146.6MB, time=22.81
+memory used=5207.6MB, alloc=146.6MB, time=23.21
+memory used=5314.7MB, alloc=146.6MB, time=23.60
+memory used=5419.8MB, alloc=146.6MB, time=23.99
+memory used=5523.8MB, alloc=146.6MB, time=24.37
+memory used=5626.7MB, alloc=146.6MB, time=24.76
+memory used=5728.9MB, alloc=146.6MB, time=25.15
+memory used=5831.0MB, alloc=146.6MB, time=25.55
+memory used=5932.0MB, alloc=146.6MB, time=25.94
+memory used=6033.6MB, alloc=146.6MB, time=26.34
+memory used=6135.8MB, alloc=146.6MB, time=26.74
+memory used=6237.9MB, alloc=146.6MB, time=27.15
+memory used=6340.2MB, alloc=146.6MB, time=27.56
+memory used=6442.6MB, alloc=146.6MB, time=27.97
+memory used=6545.4MB, alloc=146.6MB, time=28.40
+memory used=6649.2MB, alloc=146.6MB, time=28.82
+memory used=6753.1MB, alloc=146.6MB, time=29.25
+memory used=6858.4MB, alloc=146.6MB, time=29.68
+memory used=6964.2MB, alloc=146.6MB, time=30.12
+memory used=7070.2MB, alloc=146.6MB, time=30.56
+memory used=7176.4MB, alloc=146.6MB, time=30.99
+memory used=7283.4MB, alloc=146.6MB, time=31.43
+memory used=7390.7MB, alloc=146.6MB, time=31.86
+memory used=7498.2MB, alloc=146.6MB, time=32.30
+memory used=7607.1MB, alloc=146.6MB, time=32.74
+memory used=7715.1MB, alloc=146.6MB, time=33.18
+memory used=7823.8MB, alloc=146.6MB, time=33.62
+memory used=7932.1MB, alloc=146.6MB, time=34.05
+memory used=8040.4MB, alloc=146.6MB, time=34.49
+memory used=8148.3MB, alloc=146.6MB, time=34.93
+memory used=8256.0MB, alloc=146.6MB, time=35.37
+memory used=8362.9MB, alloc=146.6MB, time=35.81
+memory used=8469.7MB, alloc=146.6MB, time=36.25
+memory used=8575.9MB, alloc=146.6MB, time=36.68
+memory used=8682.8MB, alloc=146.6MB, time=37.12
+memory used=8789.6MB, alloc=146.6MB, time=37.56
+memory used=8894.7MB, alloc=146.6MB, time=37.99
+memory used=9000.9MB, alloc=146.6MB, time=38.43
+memory used=9107.1MB, alloc=146.6MB, time=38.88
+memory used=9213.4MB, alloc=146.6MB, time=39.32
+memory used=9319.3MB, alloc=146.6MB, time=39.76
+memory used=9425.2MB, alloc=146.6MB, time=40.20
+memory used=9531.2MB, alloc=146.6MB, time=40.65
+memory used=9637.3MB, alloc=146.6MB, time=41.10
+memory used=9743.5MB, alloc=146.6MB, time=41.55
+ 24.7440 seconds
+
+> endtime := time():
+> printf("Last 7+3 digits of the last (truncated to %d+3 fractional digits) %d partial sums:\n", nbdigits, nbkeptsums);
+Last 7+3 digits of the last (truncated to 2000+3 fractional digits) 50 partial sums:
+> seq(printf("%a -> %.3f\n",Mmax-nbkeptsums+j,
+> 		frac(trunc(10^(nbdigits+3)*result[j])/10^10)*10^7), j=1..nbkeptsums);
+951 -> 8979295.025
+952 -> 9072284.889
+953 -> 500039.395
+954 -> 9215888.937
+955 -> 1369045.690
+956 -> 7265151.335
+957 -> 2056510.317
+958 -> 2688113.336
+959 -> 8451783.931
+960 -> 4498204.263
+961 -> 420141.661
+962 -> 503271.743
+963 -> 7840449.591
+964 -> 3887863.794
+965 -> 2035185.762
+966 -> 2940796.077
+967 -> 9807093.160
+968 -> 1991548.968
+969 -> 6972085.496
+970 -> 7318392.930
+971 -> 9535254.957
+972 -> 9515569.759
+973 -> 9515744.559
+974 -> 9515743.007
+975 -> 9515743.021
+976 -> 9515743.021
+977 -> 9515743.021
+978 -> 9515743.021
+979 -> 9515743.021
+980 -> 9515743.021
+981 -> 9515743.021
+982 -> 9515743.021
+983 -> 9515743.021
+984 -> 9515743.021
+985 -> 9515743.021
+986 -> 9515743.021
+987 -> 9515743.021
+988 -> 9515743.021
+989 -> 9515743.021
+990 -> 9515743.021
+991 -> 9515743.021
+992 -> 9515743.021
+993 -> 9515743.021
+994 -> 9515743.021
+995 -> 9515743.021
+996 -> 9515743.021
+997 -> 9515743.021
+998 -> 9515743.021
+999 -> 9515743.021
+1000 -> 9515743.021
+> print();
+
+
+> printf("Total computing time: %8.4f secondes\n",endtime-starttime); print();
+Total computing time:  41.5990 secondes
+
+
+> printf("(nota bene: output next is truncated not rounded)\n");
+(nota bene: output next is truncated not rounded)
+> print();
+
+
+> printf("K = %.*f\n",nbdigits,trunc(10^nbdigits*result[nbkeptsums])/10^nbdigits);	
+K = 22.92067661926415034816365709437593191494476243699848156854199835657215633818991112944562603744820189899096412533234692216047119047831029750614696885712101806786493339402886962779578685961198637905620169321880408801701361790211062866117350992110210805767037858147120834425876583227265762010383147076037030815999623544735896526905676888497081960327431233145889279972904138784952498149442045921527735073670721852000408302630891616912112386263685958982357517170592498667879488473210892480659162340101523560005065480437496783090130313355610969530148133177495576252380562971608500984354547601825342215751073448392165782984461954239160106117835383539414385364560854522189932394436643879041588576091442278139919999224205535356950069034168175189094448091192827783446999651712608600666360667788028808406885936480287517909091881367951277973480033659413800763371362027592352302189783880606961593219106619283213811695786715012908593756769518010810881852946961772722236926335103032846931322633320466298267196219219497595341302984670726414948031761513294759205971089527672299506135926501652779396655043781419771218981141153317842882891200861629055788894880196729733982154879558653944323117159975090536480771145250864400214774837830566983294753464315748876002553447060501672008135376815051011744737052547610612129957267448260674661935997096464993496193687192271873184320669295864568048819396653819256420510184836565613701465120299525081820546550025351264054124173513627643280141134417264425737212158630804360623262510212580247476381362063534417790715627271161327878990223397865070779730871328361981804259067584564936421334639694641824299885451227698638525759116951086285388439089619061464892659557828739975990384755992076876969497627980209373018576261877385620791354978209812211065371184856276066863650232959560637578130158858538424462891437164464427182508450081189605301204062196698460385157169114250641274193319366108787735837242402035992031030525230441065421478284212595797673879911778367092060905208168967959515743
+> 
+> 
+> 
+# 
+# 
+# 
+# 
+> quit
+memory used=9797.7MB, alloc=146.6MB, time=41.76
+ 
+[14:52:27]
+Mardi 06 février 2024
