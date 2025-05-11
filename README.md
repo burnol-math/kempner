@@ -16,64 +16,76 @@ word but also for more than one.  Various other types of extensions of the
 concept exist.  Although the topic is more than one century old, the
 theoretical research is only in its beginnings.
 
-I first encountered the topic in late 2011 and worked on it a bit in
-January 2012.  Then in February 2024 I decided to revisit that old (somewhat
-elementary) material and prepare it for publication.  This then induced me to
-add various new results (always remaining at a somewhat elementary level,
-because there never was any time to re-visit using more powerful analytic
-machinery).
-
-This repository is
-initially to document implementations of the formulas from my February 2024
-manuscript:
-
-[Moments in the exact summation of the curious series of Kempner type](https://arxiv.org/abs/2402.08525)
+I first encountered the topic in late 2011 and worked on it a bit in early
+January 2012.  I discovered then that one could represent exactly the Kempner
+series via alternating (or positive) series with geometric convergence, where
+the coefficients are related to moments of certains measures and these moments
+can be computed by certain (linear, but full) recurrences.  Then in February
+2024 I decided to revisit that old (somewhat elementary) material and to
+prepare it for publication, which gave the (v1 of the) following manuscript:
+[Moments in the exact summation of the curious series of Kempner type](https://arxiv.org/abs/2402.08525).
 
 This manuscript was accepted for publication by American Mathematical Monthly
-in late 2024 and should appear there in late 2025 or early 2026.
-
-The first installment of this repository will contain only besides this
-short description the two Maple files I joined with my manuscript of February
-2024, together with their outputs.
+in late 2024 and should appear there in late 2025 or early 2026.  This
+repository is initially to document implementations of my January 2012
+formulas as presented in the above manuscript from February 2024.  The first
+installment of this repository contains only besides this short description
+the two Maple files I joined with my manuscript of February 2024, together
+with their outputs.  It is possible that in future the repository will get
+extended with further implementations, or with further theory; some ideas of
+January 2012 are not yet incorporated into any of my 2024 manuscripts.
 
 > [!important]
 > The two Maple files [kempner_base10_all.mpl](kempner_base10_all.mpl)
 > and [kempner_2000digits.mpl](kempner_2000digits.mpl) are both almost
 > identical up to translation into English with some earlier source I wrote
-> in January 2012.  [kempner_2000digits.mpl](kempner_2000digits.mpl) is
-> completely superseded by the SageMath code I wrote in February 2024
-> to accompany my other manuscript
-> [Measures for the summation of Irwin series](https://arxiv.org/abs/2402.09083)
-> and for which even more powerful versions are now available at the
+> in January 2012.
+>
+> The file [kempner_2000digits.mpl](kempner_2000digits.mpl)
+> is now completely superseded by the SageMath code I wrote in February 2024
+> to accompany my next manuscript
+> [Measures for the summation of Irwin series](https://arxiv.org/abs/2402.09083).
+> See the
 > sibling project [burnolmath/irwin](https://gitlab.com/burnolmath/irwin).
 >
 > As per [kempner_base10_all.mpl](kempner_base10_all.mpl), it handles
-> only radix 10, but remains to this day the sole implementation of my
+> only radix 10, but remains to this day the sole implementation (apart
+> from some Python prototype I wrote in February 2024 using only the
+> `float` type precision and which handles arbitrary base) of my
 > Kempner formulas for more than one digit being excluded.
 > I will probably at some point re-implement in a more complete
 > manner my formulas in either SageMath or perhaps directly using
 > the MPFR library (the goal being to obtain many digits).  So I
 > created this repository with the uncertain perspective to update it later
-> with some new numerical implementation.
+> with some new and more powerful numerical implementations.
 >
 > Whether this repository will also be used for archiving code handling
 > words of length greater than 1 is yet undecided.
 >
-> I am sorry I will not here document how to use the Maple files with
-> extensions `.mpl` because I hold a Maple license only on some old
-> hardware I am not using anymore, so I can't test.  This is also
-> the reason why I do not attach the files with extension `.mw`.
-> However if you are familiar with Maple syntax,
-> you will have not issue using these files.  Anyhow I am also
-> attaching the outputs I obtained from them...
+> I do not document how to use the Maple files with extensions
+> `.mpl` (but see comments therein) because I hold a Maple license
+> only on some old hardware I am not using anymore, so I couldn't
+> test now my own instructions.  This is also the reason why I do
+> not attach the files with extension `.mw`.  However if you are
+> familiar with Maple syntax, you will have not issue using these
+> files.  Anyhow I am also attaching the outputs I obtained from
+> them in February 2024.
 
 ## Bibliographical references
 
 This repository is devoted to the formulas first published in:
 
-- [Moments in the exact summation of the curious series of Kempner type](https://arxiv.org/abs/2402.08525) (to appear in American Mathematical Monthly, 2025 or 2026).
+- [Moments in the exact summation of the curious series of Kempner type](https://arxiv.org/abs/2402.08525)
+  (to appear in American Mathematical Monthly, 2025 or 2026).
 
-In a second installment
+Having written this up for publication in February 2024 got me
+started again on the topic and I obtained then a number of
+additional results, always remaining at a somewhat elementary
+level, because there never was any time to re-visit using more
+powerful analytic machinery.
+
+In particular, in
+
 - [Measures for the summation of Irwin series](https://arxiv.org/abs/2402.09083)
 
 I handled the Irwin variation, but only for one digit.  Refer to the sibling
