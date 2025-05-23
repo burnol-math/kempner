@@ -1,3 +1,4 @@
 # Prioritize Maple files
+# But attow (May 2025) linguist does not recognize Maple
 *.mpl linguist-detectable=true
 *.mpl linguist-language=Maple
