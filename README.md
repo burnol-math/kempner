@@ -75,8 +75,7 @@ January 2012 are not yet incorporated into any of my 2024 manuscripts.
 
 This repository is devoted to the formulas first published in:
 
-- [Moments in the exact summation of the curious series of Kempner type](https://arxiv.org/abs/2402.08525)
-  (to appear in American Mathematical Monthly, 2025 or 2026).
+- Moments in the exact summation of the curious series of Kempner type. Amer. Math. Monthly 2025 ([access via DOI to publisher site](https://doi.org/10.1080/00029890.2025.2554555); preprint was [arXiv:2402.08525](https://arxiv.org/abs/2402.08525)).
 
 Having written this up for publication in February 2024 got me
 started again on the topic and I obtained then a number of
@@ -86,26 +85,13 @@ powerful analytic machinery.
 
 In particular, in
 
-- [Measures for the summation of Irwin series](https://arxiv.org/abs/2402.09083)
+- Measures for the summation of Irwin series. Available at [arXiv:2402.09083](https://arxiv.org/abs/2402.09083),
 
-I handled the Irwin variation, but only for one digit.  Refer to the sibling
-project [burnolmath/irwin](https://gitlab.com/burnolmath/irwin) for details.
-
-My two papers quoted above have not yet been published but some of my further
-research has already appeared:
-
-- Summing the "exactly one 42" and similar subsums of the harmonic series,  Advances in Applied Mathematics Volume 162, January 2025, 102791. [DOI](https://doi.org/10.1016/j.aam.2024.102791)
-- Digamma function and general Fischer series in the theory of Kempner sums, Expositiones Mathematicae, Volume 42, Issue 6, December 2024, 125604. [DOI](https://doi.org/10.1016/j.exmath.2024.125604)
-- Measures associated with certain ellipsephic harmonic series and the Allouche-Hu-Morin limit theorem, Acta Mathematica Hungarica (2025) [DOI](https://doi.org/10.1007/s10474-025-01525-3)
-
-You will find at
-[arXiv:burnol](https://arxiv.org/search/?searchtype=author&query=Burnol%2C+J)
-some further manuscripts related to this topic, as well as earlier papers
-doing fancy mathematics on some other topics.  Fancier mathematics of those times
-is not yet public.
-
-TODO: perhaps add some additional bibliographical references and do the
-fancier earlier mathematics at long last.
+I handled the more general Irwin series (associated with only one digit).
+Refer to the sibling project
+[burnolmath/irwin](https://gitlab.com/burnolmath/irwin) for details and
+additional bibliographical references, inclusive of papers of mine, some of
+which have already appeared in print attow.
 
 ## License
 
