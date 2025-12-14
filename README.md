@@ -22,14 +22,15 @@ series via alternating (or positive) series with geometric convergence, where
 the coefficients are related to moments of certains measures and these moments
 can be computed by certain (linear, but full) recurrences.  Then in February
 2024 I decided to revisit that old (somewhat elementary) material and to
-prepare it for publication, which gave the (v1 of the) following manuscript:
-[Moments in the exact summation of the curious series of Kempner type](https://arxiv.org/abs/2402.08525).
+prepare it for publication. It has now appeared (September 2025 for the online version)
+as
+[Moments in the exact summation of the curious series of Kempner type](https://doi.org/10.1080/00029890.2025.2554555)
+(*The American Mathematical Monthly* **132**:10 (2025), 995-1006).  The last preprint version is at [arXiv:2402.08525](https://arxiv.org/abs/2402.08525).
 
-This manuscript was accepted for publication by American Mathematical Monthly
-in late 2024 and should appear there in late 2025 or early 2026.  This
+This
 repository is initially to document implementations of my January 2012
-formulas as presented in the above manuscript from February 2024.  The first
-installment of this repository contains only besides this short description
+formulas as presented in the above manuscript in February 2024.  The first
+installment of this repository contains only, besides this short description,
 the two Maple files I joined with my manuscript of February 2024, together
 with their outputs.  It is possible that in future the repository will get
 extended with further implementations, or with further theory; some ideas of
@@ -75,7 +76,10 @@ January 2012 are not yet incorporated into any of my 2024 manuscripts.
 
 This repository is devoted to the formulas first published in:
 
-- Moments in the exact summation of the curious series of Kempner type. Amer. Math. Monthly 2025 ([access via DOI to publisher site](https://doi.org/10.1080/00029890.2025.2554555); preprint was [arXiv:2402.08525](https://arxiv.org/abs/2402.08525)).
+- Moments in the exact summation of the curious series of Kempner type, *The
+American Mathematical Monthly* **132**:10 (2025), 995-1006
+([DOI](https://doi.org/10.1080/00029890.2025.2554555), preprint version at
+[arXiv:2402.08525](https://arxiv.org/abs/2402.08525)).
 
 Having written this up for publication in February 2024 got me
 started again on the topic and I obtained then a number of
