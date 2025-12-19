@@ -87,11 +87,11 @@ additional results, always remaining at a somewhat elementary
 level, because there never was any time to re-visit using more
 powerful analytic machinery.
 
-In particular, in
+In particular, I handled in
 
-- Measures for the summation of Irwin series. Available at [arXiv:2402.09083](https://arxiv.org/abs/2402.09083),
+- Measures for the summation of Irwin series. Available at [arXiv:2402.09083](https://arxiv.org/abs/2402.09083) ([Integers](https://math.colgate.edu/~integers/), 2026, to appear),
 
-I handled the more general Irwin series (associated with only one digit).
+the more general Irwin series (associated with only one digit).
 Refer to the sibling project
 [burnolmath/irwin](https://gitlab.com/burnolmath/irwin) for details and
 additional bibliographical references, inclusive of papers of mine, some of
