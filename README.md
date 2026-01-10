@@ -89,7 +89,8 @@ powerful analytic machinery.
 
 In particular, I handled in
 
-- Measures for the summation of Irwin series. Available at [arXiv:2402.09083](https://arxiv.org/abs/2402.09083) ([Integers](https://math.colgate.edu/~integers/), 2026, to appear),
+- Measures for the summation of Irwin series, *Integers* **26**:A11 (2026), 20pp
+([DOI](https://doi.org/10.5281/zenodo.18154150)).
 
 the more general Irwin series (associated with only one digit).
 Refer to the sibling project
