@@ -105,7 +105,7 @@ def kempner(b:int,
                             f"{nboffigures} less than 6")
 
     P_target = ceil((nboffigures + 1) * log(10, 2))
-    P_eps = P_target + min(floor((ell - 1) * log(b,2)), 10)
+    P_eps = P_target + min(ceil(ell * log(b,2)), 10)
     P_max = P_eps + 12
 
     mp.prec = P_max
@@ -304,7 +304,7 @@ def kempnerpos(b:int,
                             f"{nboffigures} less than 6")
 
     P_target = ceil((nboffigures + 1) * log(10, 2))
-    P_eps = P_target + min(floor((ell - 1) * log(b,2)), 10)
+    P_eps = P_target + min(ceil(ell * log(b,2)), 10)
     P_max = P_eps + 12
 
     mp.prec = P_max
