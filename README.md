@@ -109,6 +109,10 @@ and the first two optional ones.
 
 > [!note]
 >
+> The second keyword parameter `ell` defaults to 3.  Set it to a higher
+> value when using small bases 2, 3, perhaps also 4.  But reduce it to 2
+> for example when using base 16 or 20.
+>
 > The SageMath code at the
 > sibling project [burnolmath/irwin](https://gitlab.com/burnolmath/irwin),
 > which can handle Kempner series with one excluded digit, 
