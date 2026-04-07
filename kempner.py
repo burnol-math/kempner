@@ -1,9 +1,9 @@
 """Author: Jean-François Burnol
 Created: April 7, 2026
 
-© Jean-François Burnol, 2026
+© 2026, Jean-François Burnol
 
-This script is licensed under the
+This code is licensed under the
 Creative Commons Attribution-ShareAlike 4.0 International License.
 Full license text: https://creativecommons.org/licenses/by-sa/4.0/
 
@@ -22,16 +22,16 @@ of
     https://doi.org/10.5281/zenodo.18154150
 
 Reference 1) gives an alternating series and reference 2) also a positive
-series (only for the case of a single excluded digits but the generalization
+series (only for the case of a single excluded digit but the generalization
 to multiple excluded digits is straightforward and done here).
 
 Contrarily to the irwin_v5.sage script of May 2025 available at
 
     https://gitlab.com/burnolmath/irwin,
 
-- we do not use SageMath, but mpmath Python library,
-- we do not take care of pre-assigned counts of occurrences,
-  the code is only for excluding one or more base-b digits,
+- we do not use SageMath, but directly the mpmath Python library,
+- we do not implementent the computation for pre-assigned counts
+  of given digits, only for excluding one or many base-b digits,
 - **no attempt at parallelization is done**,
   hence the code is much simpler,
 - we do not pre-compute power sums nor do we update rows of the
@@ -40,34 +40,34 @@ Contrarily to the irwin_v5.sage script of May 2025 available at
   to add them in the end, starting from the smallest,
 - we do not pre-establish how many terms will be computed but
   stop the iteration dynamically once a certain threshold is crossed,
-- the mechanism for a decreasing running precision is implement in a
-  far simpler way,
+- the mechanism for a decreasing running precision is implemented
+  in a far simpler way,
 - the level ell is not limited to being 2, 3, or 4, it can be
   any integer at least 2. But of course ell in practice
   is limited by the fact that we have to handle
     (N or N-1) times N**(ell-1)
   admissible numbers which augments exponentially in ell.
   So higher values of ell are mainly for small bases, say 
-  2, 3 or 4 perhaps.
+  basis b from 2 to at most 5 probably.
 
 It seems that the script is roughly 5x slower than irwin_v5.sage
 for K(10,9,1002), I have not checked which parts of the code
 are involved into this.  But the code here is much simpler and
-handles multiple digits which irwin_v5.sage does not.
+it handles multiple excluded digits which irwin_v5.sage can not.
 
 The present 2026 Python script supersedes the Maple code still
 available at the present repository
 
     https://gitlab.com/burnolmath/kempner,
 
-which was done only for b=10 and would have needed an update
-for a general basis b.  It could be done, but the author is now
+which was only for b=10 and would have needed an update for a
+general basis b.  It could be done, but the author is now
 lacking a Maple license.
 
 """
 
 __version__ = "1.0.0"
-__date__    = "2026-04-06"
+__date__    = "2026-04-07"
 __author__  = "Jean-François Burnol"
 
 from typing import List
@@ -94,9 +94,9 @@ def kempner(b:int,
     :param trunc bool: (optional, defaults to False) whether to round or
                        truncate
     :rtype: str
-    :return: String with nboffigures significant figures (rounded) of the
-             decimal expansion of the Kempner sum in base b and excluded
-             digits E.
+    :return: string giving nboffigures significant figures of the decimal
+             expansion of the Kempner series for base b and excluded digits
+             E.
     """
 
     assert b > 1, f"Basis {b} less than 2"
@@ -145,13 +145,13 @@ def kempner(b:int,
     assert N == b - len(Elist), f"{Elist} has entries which are not base {b} digits"
     assert N1 > 0, "There must be some non-zero admissible digits"
 
-    # blocks[l] will be the list of admissible numbers of length l
-    # at l==0 the convention is that 0 is admissible because it is
+    # blocks[l] will be the list of admissible numbers of length l.
+    # At l==0 the convention is that 0 is admissible because it is
     # represented by the empty word, but this has no incidence anyhow
     # in what follows
     blocks = [[0],]
 
-    # at l==1 we have the admissible non zero digits
+    # At l==1 we have the admissible non zero digits
     # (in increasing order)
     blocks.append(list(A1))
     newblock = [ b * a1 + a0 for a1 in A1 for a0 in A]
@@ -159,7 +159,7 @@ def kempner(b:int,
     
     # now fill in all blocks.  This is much easier than in irwin.sage,
     # because there we needed to actually organize *all* numbers
-    # according to the number of occurrences of excluded digit d.
+    # according to the number of occurrences of an excluded digit d.
     for l in range(3, ell + 1):
         newblock = [ b * n + a for n in newblock for a in A]
         blocks.append(newblock)
@@ -187,7 +187,7 @@ def kempner(b:int,
 
     # first term (m=0) of the series
     m = 0
-    denom = b - N  # in general b**(m+1) - N
+    denom = b - N  # in general will be holding b**(m+1) - N
     denom_adjust = b * N - N
     ums = [ mpf(b) / denom ]
     cms = [ sum(x for x in level_ell_invpowers) * ums[0] ]
@@ -205,12 +205,6 @@ def kempner(b:int,
 
         mp.prec = current_prec
 
-        # update inverse powers of level ell admissible numbers
-        i = 0
-        for n in level_ell_numbers:
-            level_ell_invpowers[i] /= n
-            i += 1
-
         # update digits powers
         i = 0
         for n in A1:
@@ -222,7 +216,7 @@ def kempner(b:int,
         gammams.append(gammam)
 
         # apply recursion formula, computing binomial coefficients
-        # as exact integers
+        # (and digit power sums) as exact integers.
         um = 0
         binomj = 1
         for j in range(1, m + 1):
@@ -232,6 +226,12 @@ def kempner(b:int,
         # we need to divide by b**(m+1) - N
         um /= denom
         ums.append(um)
+
+        # update inverse powers of level ell admissible numbers
+        i = 0
+        for n in level_ell_numbers:
+            level_ell_invpowers[i] /= n
+            i += 1
 
         cm = um * sum(x for x in level_ell_invpowers)
         if cm < eps:
@@ -293,9 +293,9 @@ def kempnerpos(b:int,
     :param trunc bool: (optional, defaults to False) whether to round or
                        truncate
     :rtype: str
-    :return: String with nboffigures significant figures (rounded) of the
-             decimal expansion of the Kempner sum in base b and excluded
-             digits E.
+    :return: string giving nboffigures significant figures of the decimal
+             expansion of the Kempner series for base b and excluded digits
+             E.
     """
 
     assert b > 1, f"Basis {b} less than 2"
@@ -351,7 +351,7 @@ def kempnerpos(b:int,
 
     # first term (m=0) of the series
     m = 0
-    denom = b - N  # in general b**(m+1) - N
+    denom = b - N  # in general will hold b**(m+1) - N
     denom_adjust = b * N - N
     vms = [ mpf(b) / denom ]
     cms = [ sum(x for x in level_ell_invpowers) * vms[0] ]
@@ -371,12 +371,6 @@ def kempnerpos(b:int,
         denom = b * denom + denom_adjust  ## b**(m+1) - N
 
         mp.prec = current_prec
-
-        # update inverse powers of level ell admissible numbers
-        i = 0
-        for n in level_ell_numbers_plus_one:
-            level_ell_invpowers[i] /= n
-            i += 1
 
         # update (complementary) digits powers
         i = 0
@@ -400,6 +394,12 @@ def kempnerpos(b:int,
         vm += denom + N
         vm /= denom
         vms.append(vm)
+
+        # update inverse powers of level ell admissible numbers
+        i = 0
+        for n in level_ell_numbers_plus_one:
+            level_ell_invpowers[i] /= n
+            i += 1
 
         cm = vm * sum(x for x in level_ell_invpowers)
         if cm < eps:
@@ -467,8 +467,12 @@ The last parameters are optional:
 - silent (False): whether to print extra info
 - trunc (False): whether to truncate or round.
 
+Use higher values of ell for small bases (say b < 6) and reduce ell to 2
+if  working with bases at least 16.
+
 For use on command line: python kempner.py b d1,...,dn [nboffigures [ell]]
 This will compute according to the alternating series.  Boolean optional
-parameters can not be used.
+parameters can not be used.  The positive series can only be used from
+a Python interactive session after importing the module.
 """
               )
