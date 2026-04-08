@@ -5,7 +5,7 @@
 ## Kempner series
 
 The classical “no-9” Kempner series is
-$$1+1/2+\dots+1/8+1/10+\dots+1/18+1/20+\dots$$
+$$\frac{1}{1} + \frac{1}{2} + \dots + \frac{1}{8} + \frac{1}{10} + \dots + \frac{1}{18} + \frac{1}{20} + \dots +frac{1}{88} + \frac{1}{100} + \dots$$
 where the digit 9 is forbidden.
 This and similar series converge, but *very slowly*, and the obtention of
 their values with many (decimal, preferentially, or binary) digits is a
