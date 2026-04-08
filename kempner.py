@@ -1,5 +1,6 @@
 """Author: Jean-François Burnol
 Created: April 7, 2026
+This version: 1.1.0, April 8, 2026 (improved user interface)
 
 © 2026, Jean-François Burnol
 
@@ -66,8 +67,8 @@ lacking a Maple license.
 
 """
 
-__version__ = "1.0.0"
-__date__    = "2026-04-07"
+__version__ = "1.1.0"
+__date__    = "2026-04-08"
 __author__  = "Jean-François Burnol"
 
 from typing import List
@@ -153,7 +154,7 @@ def kempner(b:int,
 
     # At l==1 we have the admissible non zero digits
     # (in increasing order)
-    blocks.append(list(A1))
+    blocks.append(A1)
     newblock = [ b * a1 + a0 for a1 in A1 for a0 in A]
     blocks.append(newblock)
     
@@ -175,7 +176,9 @@ def kempner(b:int,
     # the u_m's are bounded above by b/(b-N). Due to inverse powers
     # we reduce the target precision at each iteration.  For ell=2
     # which is minimal, the minimal admissible number at level 2
-    # is b, so prec_delta is at least 1.
+    # is b, so prec_delta is at least 1.  We keep it as a float()
+    # as taking its floor would in some cases induce sub-optimal
+    # decrease of the running precision.
     prec_delta = log(level_ell_numbers[-1], 2)
 
     # this will hold the n**(-m-1) inverse powers of level ell numbers
@@ -191,16 +194,20 @@ def kempner(b:int,
     denom_adjust = b * N - N
     ums = [ mpf(b) / denom ]
     cms = [ sum(x for x in level_ell_invpowers) * ums[0] ]
-
     digits_powers = [1 for n in A1]
     # the gamma_0 does not intervene anyhow in the recurrence
     gammams = [ len(A) ]
 
     S += cms[-1]
     eps = S * ( mpf(2) ** -P_eps )
+    cmsign = 1
+    mplusone = 1
 
     while True:
-        m += 1
+        m = mplusone
+        mplusone += 1
+        cmsign = -cmsign
+
         denom = b * denom + denom_adjust
 
         mp.prec = current_prec
@@ -219,8 +226,8 @@ def kempner(b:int,
         # (and digit power sums) as exact integers.
         um = 0
         binomj = 1
-        for j in range(1, m + 1):
-            binomj = binomj * (m + 1 - j) // j
+        for j in range(1, mplusone):
+            binomj = binomj * (mplusone - j) // j
             um += mpf(binomj * gammams[j]) * ums[-j]
 
         # we need to divide by b**(m+1) - N
@@ -237,11 +244,12 @@ def kempner(b:int,
         if cm < eps:
             break
 
+        cm *= cmsign
         cms.append(cm)
 
         mp.prec = P_max
 
-        S += (-1)**m * cm
+        S += cm
 
         current_prec_float = current_prec_float - prec_delta
         current_prec = max(20, ceil(current_prec_float))
@@ -253,15 +261,16 @@ def kempner(b:int,
         print(f"ell is {ell}")
         print(f"basis is {b}")
         print(f"List of excluded digits is {Elist}")
-        print(f"Last used: m = {m-1}, |cm| = {nstr(cms[-1], 4, strip_zeros=False)}")
-        print(f" not used: m = {m}, |cm| = {nstr(cm, 4, strip_zeros=False)}")
+        print(f"Last used: m = {m-1}, cm = {nstr(cms[-1], 4, strip_zeros=False)}")
+        print(f" not used: m = {m}, cm = {nstr(cmsign * cm, 4, strip_zeros=False)}")
 
         # ATTENTION ! nstr supprime trailing zeros par défaut !!
         S_string = nstr(S, nboffigures + 3, strip_zeros=False)
         # print last digits + 3 more
         print(f"Last digits are {S_string[-12:-3]}({S_string[-3:]})")
 
-        print(f"K({b}, {Elist}) rounded to {nboffigures} significant figures is:")
+        print(f"K({b}, {Elist}) {'truncated' if trunc else 'rounded'} "
+              f"to {nboffigures} significant figures is:")
 
     # return result as a string with a total of nboffigures decimal digits
     if trunc:
@@ -330,7 +339,7 @@ def kempnerpos(b:int,
 
     blocks = [[0],]
 
-    blocks.append(list(A1))
+    blocks.append(A1)
     newblock = [ b * a1 + a0 for a1 in A1 for a0 in A]
     blocks.append(newblock)
     
@@ -341,6 +350,7 @@ def kempnerpos(b:int,
     # last newblock has level ell admissible numbers *ordered*
     # level_ell_numbers_plus_one has them from largest to smallest.
     level_ell_numbers_plus_one = [ n + 1 for n in newblock[::-1]]
+    prec_delta = log(level_ell_numbers_plus_one[-1], 2)
 
     # blocks[l] contains numbers with l base b digits
     S = sum(mpf(1)/n for l in range(ell-1, 0, -1) for n in blocks[l][::-1])
@@ -362,12 +372,13 @@ def kempnerpos(b:int,
 
     # This is first term (m=0) of series
     S += cms[-1]
-
-    prec_delta = log(level_ell_numbers_plus_one[-1], 2)
     eps = S * ( mpf(2) ** -P_eps )
+    mplusone = 1
 
     while True:
-        m += 1
+        m = mplusone
+        mplusone += 1
+
         denom = b * denom + denom_adjust  ## b**(m+1) - N
 
         mp.prec = current_prec
@@ -386,12 +397,12 @@ def kempnerpos(b:int,
         # as exact integers
         vm = 0
         binomj = 1
-        for j in range(1, m + 1):
-            binomj = binomj * (m + 1 - j) // j
+        for j in range(1, mplusone):
+            binomj = binomj * (mplusone - j) // j
             vm += mpf(binomj * cogammams[j]) * vms[-j]
 
         # denom is b**(m+1) - N
-        vm += denom + N
+        vm += denom + N  # i.e. b**(m+1). Extra term in the recurrence.
         vm /= denom
         vms.append(vm)
 
@@ -421,15 +432,16 @@ def kempnerpos(b:int,
         print(f"ell is {ell}")
         print(f"basis is {b}")
         print(f"List of excluded digits is {Elist}")
-        print(f"Last used: m = {m-1}, |cm| = {nstr(cms[-1], 4, strip_zeros=False)}")
-        print(f" not used: m = {m}, |cm| = {nstr(cm, 4, strip_zeros=False)}")
+        print(f"Last used: m = {m-1}, cm = {nstr(cms[-1], 4, strip_zeros=False)}")
+        print(f" not used: m = {m}, cm = {nstr(cm, 4, strip_zeros=False)}")
 
         # ATTENTION ! nstr supprime trailing zeros par défaut !!
         S_string = nstr(S, nboffigures + 3, strip_zeros=False)
         # print last digits + 3 more
         print(f"Last digits are {S_string[-12:-3]}({S_string[-3:]})")
 
-        print(f"K({b}, {Elist}) rounded to {nboffigures} significant figures is:")
+        print(f"K({b}, {Elist}) {'truncated' if trunc else 'rounded'} "
+              f"to {nboffigures} significant figures is:")
 
     # return result as a string with a total of nboffigures decimal digits
     if trunc:
@@ -441,6 +453,10 @@ def kempnerpos(b:int,
 if __name__ == "__main__":
     import sys
     if len(sys.argv) > 4:
+        if len(sys.argv) > 5:
+            print("Sorry, only up to 4 args can be used from command line.\n"
+                  "If you used spaces in the comma separated excluded\n"
+                  "digits, then your input is faulty.  Expect some breakage.")
         K = kempner(int(sys.argv[1]), list(map(int, sys.argv[2].split(','))),
                     int(sys.argv[3]), int(sys.argv[4]))
         print(K)

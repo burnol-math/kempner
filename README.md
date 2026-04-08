@@ -5,22 +5,24 @@
 ## Kempner series
 
 The classical “no-9” Kempner series is
-$1+1/2+\dots+1/8+1/10+\dots+1/18+1/20+\dots$ where the digit 9 is forbidden.
+$$1+1/2+\dots+1/8+1/10+\dots+1/18+1/20+\dots$$
+where the digit 9 is forbidden.
 This and similar series converge, but *very slowly*, and the obtention of
 their values with many (decimal, preferentially, or binary) digits is a
 challenge.
 
-One can represent exactly the Kempner series via alternating (or positive)
-series having geometric convergence, making the computation of their values
-with tens of thousands of digits amenable to personal computers.  This
-involves coefficients related to the moments of certain measures.  See
+As shown in
 [Moments in the exact summation of the curious series of Kempner type](https://doi.org/10.1080/00029890.2025.2554555)
-(*The American Mathematical Monthly* **132**:10 (2025), 995-1006)
-and [Measures for the summation of Irwin series](https://doi.org/10.5281/zenodo.18154150)
-where the positive series is explained (in the case of only one excluded
-digits, but the generalization is immediate).
+(*The American Mathematical Monthly* **132**:10 (2025), 995-1006) and
+[Measures for the summation of Irwin series](https://doi.org/10.5281/zenodo.18154150)
+(*Integers* **26**:A11 (2026), 20pp.),  one can represent exactly the Kempner
+series via alternating (or positive) series having geometric convergence,
+making the computation of their values with tens of thousands of digits
+amenable to personal computers.  This involves coefficients related to the
+moments (or “complementary moments”, which perhaps I should have called
+“co-moments”, for the positive series) of certain measures.
 
-Find a mathematical description of this work at
+For mathematical details, see
 https://burnolmath.gitlab.io/irwin/#the-new-series.
 
 ## This repository (May 2025)
@@ -32,7 +34,7 @@ the preprint of my AMM publication.
 
 > [!important]
 >
-> The file [kempner_2000digits.mpl](kempner_2000digits.mpl)
+> The file [`kempner_2000digits.mpl`](kempner_2000digits.mpl)
 > is now completely superseded by the SageMath code I wrote in February 2024
 > and updated in May 2025 to accompany
 > [Measures for the summation of Irwin series](https://doi.org/10.5281/zenodo.18154150).
@@ -51,23 +53,26 @@ the preprint of my AMM publication.
 ## Update (April 2026)
 
 I have now added a Python + [mpmath](https://mpmath.org) script
-[kempner.py](kempner.py) which implements, for all bases, and all
-sets of excluded digits, both the alternating series of the AMM article
-and its variant the positive series.
+[`kempner.py`](kempner.py) which implements, for all bases, and all sets of
+excluded digits, both the alternating series (via `kempner()`) of the AMM
+article and its variant the positive series (`kempnerpos()`).
 
-There is also an additional Python (test) file to confirm that all 1021 such
-Kempner series in base 10 are computed the same to 100 decimal places by both
-`kempner()` (alternating series) and `kempnerpos()` (positive series) and give
-the same results as the old Maple code.
+Running Python on file
+[`test_kempner_base10_all.py`](test_kempner_base10_all.py) will confirm that
+all 1021 Kempner series in base 10 are computed the same (each to 105
+significant figures) by `kempner()` (alternating series) and `kempnerpos()`
+(positive series).  Executing a `diff` as per the printed instructions to
+`stdout` will confirm each value is computed with the same 100 decimal places
+as were recorded in [`kempner_base10_all_out`](kempner_base10_all_out), which
+was produced by the old Maple code.
 
-Here are for example the Kempner series for:
+We now give a few examples of use from within an Python interactive session.
+Below are obtained 1000 decimal places for each of the Kempner series defined
+by, respectively:
 
 - base 11 and excluded digit 10,
 - base 12 and excluded digits 10 and 11,
-- base 13 and excluded digits 10, 11 , and 12,
-
-up to 1000 decimal places (truncated, but in all three cases this turns out to
-be the same as rounding to that precision).
+- base 13 and excluded digits 10, 11, and 12.
 
 ```text
 $ python
@@ -81,48 +86,46 @@ $ python
 '10.8660131760769908514816459881899056536634355480478294388534954102640758671327926119140723855044318819574895019599351999089288468462777108769193194434232448306738720619633854203939918524604325699053578665642791875569503261282384111760492311589001727213526638304927962418170463326913198710744077334598502606323900032740581360339333985577802674078775491801206423634190779904144383736197533942569522003390136056743109258135156602444372705190844823300896420633437449976945271978643817420066731697647550726244371676007977832951374977827398232934822649777463733959475097594455986822068836605577446798040595643417851912271296884824450170876772039413529593885735418157741870249884257653941889407079105298055562308891846263069914106515555786235271594619481560957046564023688074464077177736201359523415680263633383804728374149241773470278474957171288970771182177099484831369480316996373346753324025797791404551485241807806627275533842534042016294197178275142397337157413605070160067478711736942143095907790522936'
 ```
 
-Note that in the above interface we pass the list of excluded digits as second
-argument, it is possible that in the AMM paper it is rather the set of
+Note that we pass the list of excluded digits as second argument to
+`kempner()`, it is possible that in the AMM paper it is rather the set of
 admissible digits which is used to index the Kempner sum.  Probably the Python
 interface should rather be with some mutually exclusive keyword arguments
 `admissible=...`, `excluded=...`.
 
-One can also call the procedure directly from the Python command line invocation:
+One can also call the procedure directly from the command line:
 
 ```text
 $ python kempner.py 10 9,8 52
 ell is 3
 basis is 10
 List of excluded digits is [8, 9]
-Last used: m = 24, |cm| = 1.682e-53
- not used: m = 25, |cm| = 1.217e-55
+Last used: m = 25, cm = -1.217e-55
+ not used: m = 26, cm = 8.836e-58
 Last digits are 875749085(874)
 K(10, [8, 9]) rounded to 52 significant figures is:
 11.29158161683249138170633221349816010151212875749086
 ```
 
-Then, the final output is always rounded, but 3 more digits are shown from
-which in general one can conclude about what the truncated value to that
-precision would be (as is the case in example above).  This interface
-maps only to `kempner()` and only handles the two mandatory arguments
-and the first two optional ones.
+This interface maps only to `kempner()` and only handles the two mandatory
+arguments (basis and comma separated excluded digits) and the first two
+optional ones (number of significant figures and level).
 
 > [!note]
 >
 > The second keyword parameter `ell` defaults to 3.  Set it to a higher
-> value when using small bases 2, 3, perhaps also 4.  But reduce it to 2
+> value when using small bases 2, 3, 4 perhaps also 5.  But reduce it to 2
 > for example when using base 16 or 20.
 >
 > The SageMath code at the
 > sibling project [burnolmath/irwin](https://gitlab.com/burnolmath/irwin),
 > which can handle Kempner series with one excluded digit, 
-> appears to be, for example for base 10, excluded digit 9, and 1000
-> decimal places, about 5x times faster than the Python code here.
+> proves to be in the case of base 10, excluded digit 9, and 1002
+> significant figures, about 5x times faster than the Python code here.
 >
 > I have not tried to identify which optimizations in `irwin_v5.sage`
 > explain this, but the code there has a much more complex organization
 > in parts due to attempts at parallelization.  The Python code
-> in [kempner.py](kempner.py) is much more straightforward and can
+> in [`kempner.py`](kempner.py) is much more straightforward and can
 > get translated presumably very easily into the programming language
 > of your choice.  It also has almost no memory impact.
 > See comments therein.

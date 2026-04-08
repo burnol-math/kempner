@@ -9,9 +9,10 @@ admissible digits.
   are exactly identical.
 
 Author: Jean-François Burnol
-Created: April 7, 2026
+Created: April 7, 2026 (1.0.0)
+This version (1.1.0) April 8, 2026 (improved user interface)
 
-© Jean-François Burnol, 2026
+© 2026 Jean-François Burnol
 
 This script is licensed under the
 Creative Commons Attribution-ShareAlike 4.0 International License.
@@ -21,6 +22,10 @@ ANY RE-USE OR PLAGIARIZING BY AN ARTIFICIAL INTELLIGENCE WITHOUT
 PROPER ATTRIBUTION IS STRICTLY FORBIDDEN AND WILL GET PUNISHED
 
 """
+
+__version__ = "1.1.0"
+__date__    = "2026-04-08"
+__author__  = "Jean-François Burnol"
 
 from kempner import *
 
@@ -145,9 +150,14 @@ print()
 print("""\
 All 1021 Kempner sums for base 10 computed to 105 rounded decimal
 digits have given identical results for kempner() and kemperpos().
-See file 'python_base10_all_out for the values, listed according
-to the lists of admissible digits.  Use "diff" to compare with
-data in file 'kempner_base10_all_out' produced by Maple.
+See file 'python_base10_all_out' for these values, listed according
+to their respective lists of admissible digits.  Execute
+
+    diff kempner_base10_all_out python_base10_all_out | grep -v '^<'
+
+to check that all truncations to 100 decimal places match the values
+obtained from the Maple code and recorded in the past as part of file
+'kempner_base10_all_out'. (Some quoting may be needed in your shell).
 """)
 
 f.close()
